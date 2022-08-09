@@ -10,4 +10,11 @@ xcuserdata/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+Packages
+.build
+db.sqlite
+.swiftpm
+.env
+
+*.pem
 sshScript.sh

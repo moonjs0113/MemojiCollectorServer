@@ -33,9 +33,11 @@ final class User: Model, Content {
         
     }
 
-    init(id: UUID? = nil, userName: String, cardIDs: [String]) {
+    init(id: UUID? = nil, userName: String, firstCardID: String?, secondCardID: String?, sharedCardIDs: [String]) {
         self.id = id
         self.userName = userName
-        self.cardIDs = cardIDs
+        self.firstCardID = firstCardID
+        self.secondCardID = secondCardID
+        self.sharedCardIDs = sharedCardIDs
     }
 }

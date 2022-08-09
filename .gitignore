@@ -1,3 +1,4 @@
+# Git Ignore
 Packages
 .build
 xcuserdata
@@ -7,3 +8,11 @@ DerivedData/
 db.sqlite
 .swiftpm
 .env
+
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
+

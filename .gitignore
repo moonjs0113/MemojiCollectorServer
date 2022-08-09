@@ -1,7 +1,13 @@
-.DS_Store
-
+# Git Ignore
+Packages
+.build
+xcuserdata
+*.xcodeproj
 DerivedData/
-xcuserdata/
+.DS_Store
+db.sqlite
+.swiftpm
+.env
 
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
@@ -9,3 +15,4 @@ xcuserdata/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
+

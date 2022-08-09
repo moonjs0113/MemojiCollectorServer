@@ -16,3 +16,6 @@ db.sqlite
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+*.pem
+sshScript.sh
+

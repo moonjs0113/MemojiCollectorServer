@@ -17,5 +17,5 @@ db.sqlite
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 *.pem
-sshScript.sh
+*.sh
 

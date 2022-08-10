@@ -9,6 +9,7 @@ import Foundation
 
 struct CardDTO: Codable {
     var userID: UUID
+    var cardID: UUID?
     var userName: String?
     var firstString: String?
     var secondString: String?

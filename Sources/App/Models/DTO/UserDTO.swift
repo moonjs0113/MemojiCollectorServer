@@ -14,6 +14,4 @@ struct UserDTO: Codable {
     var secondCardID: String?
     var sharedCardIDs: [String]?
     var token: String?
-    
-
 }

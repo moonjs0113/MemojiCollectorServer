@@ -27,7 +27,7 @@ struct CardController: RouteCollection {
         user.get("createUserID", ":id", use: createUserID) // User 등록하기 GET
         user.get(":id", use: readSingleUser) // User 정보 가져오기 GET
         user.delete(":id", use: deleteUser) // User 정보 지우기 DELETE
-        user.patch(use: updateUserName) // User 이름 바꾸기 PATC
+        user.patch(use: updateUserName) // User 이름 바꾸기 PATCH
     }
     
     func readAllCard(req: Request) throws -> EventLoopFuture<[Card]> {
@@ -55,13 +55,21 @@ struct CardController: RouteCollection {
     }
     
     // 나의 카드 삭제 DELETE
-    // [] Card에서 지우기
-    // [] User에서 지우기
     func deleteMyCard(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        return Card.find(req.parameters.get("id"), on: req.db)
-            .unwrap(or: Abort(.notFound))
-            .flatMap {
-                $0.delete(on: req.db)
+        let cardDTO = try req.content.decode(CardDTO.self)
+        let cardID = cardDTO.cardID ?? UUID()
+        return Card.find(cardID, on: req.db)
+            .map { card in
+                _ = User.find(cardDTO.userID, on: req.db)
+                    .map { user in
+                        if (cardDTO.isRight ?? true) {
+                            user?.firstCardID = nil
+                        } else {
+                            user?.secondCardID = nil
+                        }
+                        _ = user?.update(on: req.db)
+                    }
+                _ = card?.delete(on: req.db)
             }
             .transform(to: .ok)
     }
@@ -78,8 +86,6 @@ struct CardController: RouteCollection {
     }
 
     // 카드 생성 POST
-    // [] Card에 저장히기
-    // [] User에 저장히기
     func createCard(req: Request) throws -> EventLoopFuture<Card> {
         let cardDTO = try req.content.decode(CardDTO.self)
         let card = cardDTO.createCard()

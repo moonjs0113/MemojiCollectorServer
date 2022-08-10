@@ -20,15 +20,19 @@ struct CardController: RouteCollection {
         }
         
         let user = routes.grouped("user")
-        user.get("createUserID", ":id", use: createUserID) // User 등록하기 GET
-        user.get(":id", use: createUserID) // User 정보 가져오기 GET
-        user.delete(":id", use: deleteUser) // User 정보 지우기 DELETE
-        user.patch(use: updateUserName) // User 이름 바꾸기 PATCH
         
+        user.get("createUserID", ":id", use: createUserID) // User 등록하기 GET
+        user.get(":id", use: readSingleUser) // User 정보 가져오기 GET
+        user.delete(":id", use: deleteUser) // User 정보 지우기 DELETE
+        user.patch(use: updateUserName) // User 이름 바꾸기 PATC
     }
     
     func readAllCard(req: Request) throws -> EventLoopFuture<[Card]> {
         return Card.query(on: req.db).all()
+    }
+    
+    func readAllUser(req: Request) throws -> EventLoopFuture<[Card]> {
+        return User.query(on: req.db).all()
     }
     
     // 카드 단일 조회 GET

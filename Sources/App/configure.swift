@@ -15,7 +15,6 @@ public func configure(_ app: Application) throws {
         database: "memojicard"
     ), as: .psql)
 
-//    app.migrations.add(CreateTodo())
     app.migrations.add(UserMigration())
     app.migrations.add(CardMigration())
 

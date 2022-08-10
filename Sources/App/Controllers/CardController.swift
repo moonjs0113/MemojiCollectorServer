@@ -91,6 +91,7 @@ struct CardController: RouteCollection {
                     } else {
                         $0?.secondCardID = card.id?.uuidString
                     }
+                    _ = $0?.update(on: req.db)
                 }
             return card
         }

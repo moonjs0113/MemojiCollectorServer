@@ -20,3 +20,6 @@ struct CardDTO: Codable {
                     secondString: self.secondString ?? "")
     }
 }
+
+
+

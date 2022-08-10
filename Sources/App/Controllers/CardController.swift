@@ -31,7 +31,7 @@ struct CardController: RouteCollection {
         return Card.query(on: req.db).all()
     }
     
-    func readAllUser(req: Request) throws -> EventLoopFuture<[Card]> {
+    func readAllUser(req: Request) throws -> EventLoopFuture<[User]> {
         return User.query(on: req.db).all()
     }
     

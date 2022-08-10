@@ -14,13 +14,10 @@ struct CardController: RouteCollection {
         let card = routes.grouped("card")
         card.get(use: readAllCard)
         card.post(use: createCard) // 카드 생성 POST
+        card.delete(use: deleteMyCard) // 나의 카드 지우기 DELETE
         card.group(":id") { cardID in
-            cardID.delete(use: deleteMyCard) // 나의 카드 지우기 DELETE
             cardID.get(use: readSingleCard) // 카드 단일 조회 GET
         }
-        
-        // 공유받은 카드 추가 PATCH
-        // 공유받은 카드 삭제 PATCH
         
         let user = routes.grouped("user")
         user.get(use: readAllUser)
@@ -28,6 +25,10 @@ struct CardController: RouteCollection {
         user.get(":id", use: readSingleUser) // User 정보 가져오기 GET
         user.delete(":id", use: deleteUser) // User 정보 지우기 DELETE
         user.patch(use: updateUserName) // User 이름 바꾸기 PATCH
+        user.group("card") { cardID in
+            // 공유받은 카드 추가 PATCH
+            // 공유받은 카드 삭제 PATCH
+        }
     }
     
     func readAllCard(req: Request) throws -> EventLoopFuture<[Card]> {

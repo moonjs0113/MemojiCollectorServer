@@ -15,6 +15,7 @@ struct UserMigration: Migration {
             .field("firstCardID", .string)
             .field("secondCardID", .string)
             .field("sharedCardIDs", .array(of: .string), .required)
+            .field("token", .string)
             .create()
     }
     

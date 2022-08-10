@@ -13,14 +13,17 @@ struct CardController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let card = routes.grouped("card")
         card.get(use: readAllCard)
-        card.post(use: createCard)
+        card.post(use: createCard) // 카드 생성 POST
         card.group(":id") { cardID in
-            cardID.delete(use: deleteMyCard)
+            cardID.delete(use: deleteMyCard) // 나의 카드 지우기 DELETE
             cardID.get(use: readSingleCard) // 카드 단일 조회 GET
         }
         
-        let user = routes.grouped("user")
+        // 공유받은 카드 추가 PATCH
+        // 공유받은 카드 삭제 PATCH
         
+        let user = routes.grouped("user")
+        user.get(use: readAllUser)
         user.get("createUserID", ":id", use: createUserID) // User 등록하기 GET
         user.get(":id", use: readSingleUser) // User 정보 가져오기 GET
         user.delete(":id", use: deleteUser) // User 정보 지우기 DELETE
@@ -78,9 +81,18 @@ struct CardController: RouteCollection {
     // [] Card에 저장히기
     // [] User에 저장히기
     func createCard(req: Request) throws -> EventLoopFuture<Card> {
-        let card = try req.content.decode(Card.self)
+        let cardDTO = try req.content.decode(CardDTO.self)
+        let card = cardDTO.createCard()
         return card.create(on: req.db).map {
-            card
+            _ = User.find(cardDTO.userID, on: req.db)
+                .map {
+                    if (cardDTO.isRight ?? true) {
+                        $0?.firstCardID = card.id?.uuidString
+                    } else {
+                        $0?.secondCardID = card.id?.uuidString
+                    }
+                }
+            return card
         }
     }
     

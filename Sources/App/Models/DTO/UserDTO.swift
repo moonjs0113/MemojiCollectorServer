@@ -15,7 +15,5 @@ struct UserDTO: Codable {
     var sharedCardIDs: [String]?
     var token: String?
     
-    func createUser() -> User {
-        return User(userName: self.userName ?? "")
-    }
+
 }

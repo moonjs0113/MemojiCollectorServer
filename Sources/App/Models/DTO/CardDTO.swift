@@ -8,8 +8,15 @@
 import Foundation
 
 struct CardDTO: Codable {
-    var id: UUID
+    var userID: UUID
     var userName: String?
     var firstString: String?
     var secondString: String?
+    var isRight: Bool?
+    
+    func createCard() -> Card {
+        return Card(userName: self.userName ?? "",
+                    firstString: self.firstString ?? "",
+                    secondString: self.secondString ?? "")
+    }
 }

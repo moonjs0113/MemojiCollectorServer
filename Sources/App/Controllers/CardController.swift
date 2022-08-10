@@ -146,11 +146,22 @@ struct CardController: RouteCollection {
             throw Abort(.badRequest, reason: "Failed Convert UUID Parameters")
         }
         
-        return User.query(on: req.db)
-            .filter(\.$id == userUUID)
-            .all()
-            .mapEach {
-                $0.delete(on: req.db)
+        return User.find(userUUID, on: req.db)
+            .map { user in
+                let firstCardUUID = UUID(uuidString: user?.firstCardID ?? "") ?? UUID()
+                let secondCardUUID = UUID(uuidString: user?.secondCardID ?? "") ?? UUID()
+                
+                _ = Card.find(firstCardUUID, on: req.db)
+                    .map { card in
+                        card?.delete(on: req.db)
+                    }
+                
+                _ = Card.find(secondCardUUID, on: req.db)
+                    .map { card in
+                        card?.delete(on: req.db)
+                    }
+                
+                _ = user?.delete(on: req.db)
             }
             .transform(to: .ok)
     }

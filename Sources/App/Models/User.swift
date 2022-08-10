@@ -29,15 +29,19 @@ final class User: Model, Content {
     @Field(key: "sharedCardIDs")
     var sharedCardIDs: [String]
     
+    @OptionalField(key: "token")
+    var token: String?
+    
     init() {
         
     }
 
-    init(id: UUID? = nil, userName: String, firstCardID: String?, secondCardID: String?, sharedCardIDs: [String]) {
+    init(id: UUID? = nil, userName: String, firstCardID: String? = nil, secondCardID: String? = nil, sharedCardIDs: [String] = [], token: String? = nil) {
         self.id = id
         self.userName = userName
         self.firstCardID = firstCardID
         self.secondCardID = secondCardID
         self.sharedCardIDs = sharedCardIDs
+        self.token = token
     }
 }

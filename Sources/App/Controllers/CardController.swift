@@ -113,7 +113,7 @@ struct CardController: RouteCollection {
     // User 정보 지우기 DELETE
     // [] User에서 지우기
     // [] Card 에서 지우기
-    func deleteUser(req: Request) throws -> EventLoopFuture<User> {
+    func deleteUser(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         guard let userID = req.parameters.get("id") else {
             throw Abort(.badRequest, reason: "Failed Get Parameters")
         }
@@ -124,8 +124,11 @@ struct CardController: RouteCollection {
         
         return User.query(on: req.db)
             .filter(\.$id == userUUID)
-            .first()
-            .unwrap(or: Abort(.notFound, reason: "UserID: \(userUUID) Not Found"))
+            .all()
+            .mapEach {
+                $0.delete(on: req.db)
+            }
+            .transform(to: .ok)
     }
     
     // User 이름 바꾸기 PATCH

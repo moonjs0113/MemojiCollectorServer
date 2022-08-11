@@ -26,8 +26,7 @@ struct CardController: RouteCollection {
         user.delete(":id", use: deleteUser) // User 정보 지우기 DELETE
         user.patch(use: updateUserName) // User 이름 바꾸기 PATCH
         user.group("card") { cardID in
-            // 공유받은 카드 추가 PATCH
-            // 공유받은 카드 삭제 PATCH
+            user.patch(use: updateShardCard) // 공유받은 카드 업데이트 PATCH
         }
     }
     
@@ -74,17 +73,6 @@ struct CardController: RouteCollection {
             }
             .transform(to: .ok)
     }
-    
-    // 공유받은 카드 삭제 PATCH
-    // [] User에서만 지우기
-    func deleteShardCard(req: Request) throws -> EventLoopFuture<User> {
-        let userDTO = try req.content.decode(UserDTO.self)
-        let userID = (userDTO.id ?? UUID())
-        return User.query(on: req.db)
-            .filter(\.$id == userID)
-            .first()
-            .unwrap(or: Abort(.notFound, reason: "UserID: \(userID) Not Found"))
-    }
 
     // 카드 생성 POST
     func createCard(req: Request) throws -> EventLoopFuture<Card> {
@@ -103,10 +91,7 @@ struct CardController: RouteCollection {
             return card
         }
     }
-    
-    // 받은 카드 추가 PATCH
-    // [] User에 저장히기
-    
+
     // User 등록하기 GET
     func createUserID(req: Request) throws -> EventLoopFuture<User> {
         guard let userName = req.parameters.get("id") else {
@@ -135,8 +120,6 @@ struct CardController: RouteCollection {
     }
     
     // User 정보 지우기 DELETE
-    // [] User에서 지우기
-    // [] Card 에서 지우기
     func deleteUser(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         guard let userID = req.parameters.get("id") else {
             throw Abort(.badRequest, reason: "Failed Get Parameters")
@@ -178,4 +161,32 @@ struct CardController: RouteCollection {
             }
             .transform(to: .ok)
     }
+    
+    // 공유받은 카드 삭제 PATCH
+    // [] User에서만 지우기
+    func deleteShardCard(req: Request) throws -> EventLoopFuture<User> {
+        let userDTO = try req.content.decode(UserDTO.self)
+        let userID = (userDTO.id ?? UUID())
+        return User.query(on: req.db)
+            .filter(\.$id == userID)
+            .first()
+            .unwrap(or: Abort(.notFound, reason: "UserID: \(userID) Not Found"))
+    }
+    
+    
+    // 받은 카드 추가 PATCH
+    // [] User에 저장히기
+    func updateShardCard(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        let userDTO = try req.content.decode(UserDTO.self)
+        let userID = (userDTO.id ?? UUID())
+        return User.query(on: req.db)
+            .filter(\.$id == userID)
+            .all()
+            .mapEach {
+                $0.sharedCardIDs = userDTO.sharedCardIDs ?? []
+                _ = $0.update(on: req.db)
+            }
+            .transform(to: .ok)
+    }
+    
 }

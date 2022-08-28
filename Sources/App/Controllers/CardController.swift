@@ -132,7 +132,7 @@ struct CardController: RouteCollection {
         return User.find(userUUID, on: req.db)
             .map { user in
                 
-                if let firstCardID = user.firstCardID,
+                if let firstCardID = user?.firstCardID,
                    let firstCardUUID = UUID(uuidString: firstCardID) {
                     _ = Card.find(firstCardUUID, on: req.db)
                         .map { card in
@@ -140,7 +140,7 @@ struct CardController: RouteCollection {
                         }
                 }
                 
-                if let secondCardID = user.secondCardID,
+                if let secondCardID = user?.secondCardID,
                    let secondCardUUID = UUID(uuidString: secondCardID) {
                     _ = Card.find(secondCardUUID, on: req.db)
                         .map { card in

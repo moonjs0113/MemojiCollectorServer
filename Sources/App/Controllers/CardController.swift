@@ -131,18 +131,22 @@ struct CardController: RouteCollection {
         
         return User.find(userUUID, on: req.db)
             .map { user in
-                let firstCardUUID = UUID(uuidString: user?.firstCardID ?? "") ?? UUID()
-                let secondCardUUID = UUID(uuidString: user?.secondCardID ?? "") ?? UUID()
                 
-                _ = Card.find(firstCardUUID, on: req.db)
-                    .map { card in
-                        card?.delete(on: req.db)
-                    }
+                if let firstCardID = user.firstCardID,
+                   let firstCardUUID = UUID(uuidString: firstCardID) {
+                    _ = Card.find(firstCardUUID, on: req.db)
+                        .map { card in
+                            card?.delete(on: req.db)
+                        }
+                }
                 
-                _ = Card.find(secondCardUUID, on: req.db)
-                    .map { card in
-                        card?.delete(on: req.db)
-                    }
+                if let secondCardID = user.secondCardID,
+                   let secondCardUUID = UUID(uuidString: secondCardID) {
+                    _ = Card.find(secondCardUUID, on: req.db)
+                        .map { card in
+                            card?.delete(on: req.db)
+                        }
+                }
                 
                 _ = user?.delete(on: req.db)
             }
@@ -157,6 +161,25 @@ struct CardController: RouteCollection {
             .all()
             .mapEach {
                 $0.userName = userDTO.userName ?? ""
+                
+                if let firstCardID = $0.firstCardID,
+                   let firstCardUUID = UUID(uuidString: firstCardID) {
+                    _ = Card.find(firstCardUUID, on: req.db)
+                        .map { card in
+                            card?.delete(on: req.db)
+                        }
+                    $0.firstCardID = nil
+                }
+                
+                if let secondCardID = $0.secondCardID,
+                   let secondCardUUID = UUID(uuidString: secondCardID) {
+                    _ = Card.find(secondCardUUID, on: req.db)
+                        .map { card in
+                            card?.delete(on: req.db)
+                        }
+                    $0.secondCardID = nil
+                }
+                
                 _ = $0.update(on: req.db)
             }
             .transform(to: .ok)

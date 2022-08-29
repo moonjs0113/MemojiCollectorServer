@@ -24,7 +24,7 @@ struct CardController: RouteCollection {
         user.get("createUserID", ":id", use: createUserID) // User 등록하기 GET
         user.get(":id", use: readSingleUser) // User 정보 가져오기 GET
         user.delete(":id", use: deleteUser) // User 정보 지우기 DELETE
-        user.patch(use: updateUserName) // User 이름 바꾸기 PATCH
+        user.post(use: updateUserName) // User 이름 바꾸기 POST
         user.group("card") { cardID in
             user.patch(use: updateShardCard) // 공유받은 카드 업데이트 PATCH
         }

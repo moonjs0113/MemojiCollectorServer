@@ -62,6 +62,7 @@ struct CardController: RouteCollection {
             .map { card in
                 _ = User.find(cardDTO.userID, on: req.db)
                     .map { user in
+                        print(cardDTO)
                         if (cardDTO.isRight ?? true) {
                             user?.secondCardID = nil
                         } else {
@@ -79,8 +80,10 @@ struct CardController: RouteCollection {
         let cardDTO = try req.content.decode(CardDTO.self)
         let card = cardDTO.createCard()
         return card.create(on: req.db).map {
+            
             _ = User.find(cardDTO.userID, on: req.db)
                 .map {
+                    print(cardDTO)
                     if (cardDTO.isRight ?? true) {
                         $0?.secondCardID = card.id?.uuidString
                     } else {

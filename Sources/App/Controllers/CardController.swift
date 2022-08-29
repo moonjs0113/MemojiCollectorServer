@@ -63,9 +63,9 @@ struct CardController: RouteCollection {
                 _ = User.find(cardDTO.userID, on: req.db)
                     .map { user in
                         if (cardDTO.isRight ?? true) {
-                            user?.firstCardID = nil
-                        } else {
                             user?.secondCardID = nil
+                        } else {
+                            user?.firstCardID = nil
                         }
                         _ = user?.update(on: req.db)
                     }
@@ -82,9 +82,9 @@ struct CardController: RouteCollection {
             _ = User.find(cardDTO.userID, on: req.db)
                 .map {
                     if (cardDTO.isRight ?? true) {
-                        $0?.firstCardID = card.id?.uuidString
-                    } else {
                         $0?.secondCardID = card.id?.uuidString
+                    } else {
+                        $0?.firstCardID = card.id?.uuidString
                     }
                     _ = $0?.update(on: req.db)
                 }

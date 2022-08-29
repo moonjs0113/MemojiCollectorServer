@@ -160,6 +160,7 @@ struct CardController: RouteCollection {
             .filter(\.$id == (userDTO.id ?? UUID()))
             .all()
             .mapEach {
+                print($0)
                 $0.userName = userDTO.userName ?? ""
                 
                 if let firstCardID = $0.firstCardID,

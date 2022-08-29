@@ -156,12 +156,11 @@ struct CardController: RouteCollection {
     // User 이름 바꾸기 PATCH
     func updateUserName(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         let userDTO = try req.content.decode(UserDTO.self)
-        print(userDTO)
+        
         return User.query(on: req.db)
             .filter(\.$id == (userDTO.id ?? UUID()))
             .all()
             .mapEach {
-                print($0)
                 $0.userName = userDTO.userName ?? ""
                 
                 if let firstCardID = $0.firstCardID,

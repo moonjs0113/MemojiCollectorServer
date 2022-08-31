@@ -21,7 +21,7 @@ struct FileController: RouteCollection {
     func uploadImage(req: Request) throws -> EventLoopFuture<Response> {
         let file = try req.content.decode(File.self)
         let path = req.application.directory.publicDirectory + file.filename
-        
+        print(file)
         return req.fileio
           .writeFile(file.data, at: path)
           .transform(to: Response(status: .accepted))

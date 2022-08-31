@@ -6,7 +6,7 @@ import Vapor
 public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-    app.routes.defaultMaxBodySize = "100mb"
+    app.routes.defaultMaxBodySize = "100MB"
     
     app.databases.use(.postgres(
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",

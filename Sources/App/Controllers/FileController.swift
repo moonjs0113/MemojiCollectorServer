@@ -9,8 +9,6 @@ import Fluent
 import Vapor
 import Foundation
 
-
-
 struct FileController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let file = routes.grouped("file")

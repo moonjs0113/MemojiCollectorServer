@@ -15,7 +15,6 @@ struct FileController: RouteCollection {
         file.post(use: uploadImage)
     }
     
-    
     func uploadImage(req: Request) throws -> EventLoopFuture<Response> {
         let file = try req.content.decode(File.self)
         let path = req.application.directory.publicDirectory + file.filename
@@ -25,3 +24,5 @@ struct FileController: RouteCollection {
           .transform(to: Response(status: .accepted))
     }
 }
+
+

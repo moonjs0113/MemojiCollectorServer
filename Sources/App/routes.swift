@@ -13,8 +13,13 @@ func routes(_ app: Application) throws {
     }
     
     
-    app.get("a.png") { req -> Response in
-        let directoryURL = DirectoryConfiguration.detect().publicDirectory + "a.png"
+    app.get("photo_zone_a.png") { req -> Response in
+        let directoryURL = DirectoryConfiguration.detect().publicDirectory + "photoA.png"
+        return req.fileio.streamFile(at: directoryURL, mediaType: .png)
+    }
+    
+    app.get("photo_zone_b.png") { req -> Response in
+        let directoryURL = DirectoryConfiguration.detect().publicDirectory + "photoB.png"
         return req.fileio.streamFile(at: directoryURL, mediaType: .png)
     }
     
